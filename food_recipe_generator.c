@@ -191,6 +191,8 @@ int main()
 {
     int num, edge;
 
+    printf("\n::::PROGRAM STARTED::::\n\n");
+
     printf("\nEnter the number of elements = ");
     scanf("%d", &num);
 
