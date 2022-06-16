@@ -40,7 +40,7 @@ queue *enqueue(queue *head, int value)
     return head;
 }
 
-queue *dequeue(queue *head) 
+queue *dequeue(queue *head)
 {
     if (head == NULL)
     {
@@ -50,7 +50,6 @@ queue *dequeue(queue *head)
     head = head->next;
     return head;
 }
-
 
 void init_all(int num, int visi[num], int ad_mat[num][num])
 {
@@ -131,11 +130,11 @@ void cns_graph(int num, node arr[num], int ad_mat[num][num])
 void calc_in_deg(int num, int ad_mat[num][num], int in_deg[num])
 {
     int count = 0;
-    for(int i=0; i<num; i++)
+    for (int i = 0; i < num; i++)
     {
-        for(int j=0; j<num; j++)
+        for (int j = 0; j < num; j++)
         {
-            if(ad_mat[j][i] == 1)
+            if (ad_mat[j][i] == 1)
             {
                 count++;
             }
@@ -147,37 +146,44 @@ void calc_in_deg(int num, int ad_mat[num][num], int in_deg[num])
 
 void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int in_deg[num], queue *head)
 {
+    int pop_ele;
     printf("\n");
 
-    for(int i=0; i<num; i++)
+    for (int i = 0; i < num; i++)
     {
-        if(in_deg[i] == 0)
+        if (in_deg[i] == 0)
         {
             head = enqueue(head, i);
-            visi[i] = 1;
         }
     }
 
-    while(head != NULL)
+    while (head != NULL)
     {
-        for(int i=0; i<num; i++)
+        if (visi[head->val] != 1)
         {
-            if(ad_mat[head->val][i] == 1)
+            printf("%s\n", arr[head->val].ele);
+            visi[head->val] = 1;
+        }
+        pop_ele = head->val;
+        head = dequeue(head);
+
+        for (int i = 0; i < num; i++)
+        {
+            if (ad_mat[pop_ele][i] == 1)
             {
-                if(visi[i] != 1)
+                if (visi[i] != 1 && in_deg[i] != 0)
                 {
                     in_deg[i] -= 1;
-                    if(in_deg[i] == 0)
+                    if (in_deg[i] == 0)
                     {
                         head = enqueue(head, i);
+                        printf("%s\n", arr[i].ele);
                         visi[i] = 1;
                     }
                 }
             }
-        }
+        } 
 
-        printf("%s\n", arr[head->val].ele);
-        head = dequeue(head);
     }
 }
 
@@ -193,6 +199,8 @@ int main()
     queue *head = NULL;
 
     cns_graph(num, arr, ad_mat);
+
+    calc_in_deg(num, ad_mat, in_deg);
 
     topo_sort(num, arr, ad_mat, visi, in_deg, head);
 
