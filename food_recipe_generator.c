@@ -149,7 +149,7 @@ void calc_in_deg(int num, int ad_mat[num][num], int in_deg[num])
 
 void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int in_deg[num], queue *head)
 {
-    int pop_ele;
+    int pop_ele, time = 0;
     printf("\n");
 
     for (int i = 0; i < num; i++)
@@ -164,8 +164,20 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
     {
         if (visi[head->val] != 1)
         {
-            printf("\t\t%s\n", arr[head->val].ele);
-            visi[head->val] = 1;
+            if (time == 0)
+            {
+                printf("\t\t%s\n", arr[head->val].ele);
+                usleep(1000000);
+                visi[head->val] = 1;
+                time = 1;
+            }
+            else
+            {
+                printf("\n\t\t  %c\n", 25);
+                printf("\t\t%s\n", arr[head->val].ele);
+                usleep(1000000);
+                visi[head->val] = 1;
+            }
         }
         pop_ele = head->val;
         head = dequeue(head);
@@ -180,13 +192,14 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
                     if (in_deg[i] == 0)
                     {
                         head = enqueue(head, i);
+                        printf("\n\t\t  %c\n", 25);
                         printf("\t\t%s\n", arr[i].ele);
+                        usleep(1000000);
                         visi[i] = 1;
                     }
                 }
             }
-        } 
-
+        }
     }
 }
 
@@ -214,7 +227,7 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
 //     gotoxy(a,d);
 //     printf("\xc8");
 //     gotoxy(c,d);
-//     printf("\xbc");   
+//     printf("\xbc");
 
 // }
 
@@ -222,10 +235,10 @@ void print_title()
 {
     system("cls");
     printf("\n\n");
-    system("color 0A");
+    system("color 0E");
     char a = 177, b = 219;
     printf("\t\t");
-    for(int i=0; i<88; i++)
+    for (int i = 0; i < 88; i++)
     {
         printf("%c", b);
     }
@@ -233,12 +246,51 @@ void print_title()
     printf("\t\t");
     printf("\n\t\t\t\t\t\tFOOD RECIPE GENERATOR\n");
     printf("\t\t");
-    for(int i=0; i<88; i++)
+    for (int i = 0; i < 88; i++)
     {
         printf("%c", b);
     }
     printf("\r");
     printf("\t\t");
+}
+
+void thank_you()
+{
+    printf("\n\n");
+    char a = 177, b = 219;
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+    printf("\n\t\t\t\t\t\t::::THANK YOU::::\n");
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+}
+
+void pwd_gen()
+{
+    int i = 0;
+    char ch;
+    char usr[25];
+    char pwd[25];
+    printf("\n\n\t\tEnter Username = ");
+    scanf("%s", usr);
+    printf("\n\t\tEnter Password = ");
+    while ((ch = _getch()) != 13)
+    {
+        pwd[i] = ch;
+        printf("*");
+        i++;
+    }
+    pwd[i] = '\0';
 }
 
 int main()
@@ -248,6 +300,8 @@ int main()
     printf("\n::::PROGRAM STARTED::::\n\n");
 
     print_title();
+
+    pwd_gen();
 
     printf("\n\n\t\tEnter the number of elements = ");
     scanf("%d", &num);
@@ -262,7 +316,9 @@ int main()
 
     topo_sort(num, arr, ad_mat, visi, in_deg, head);
 
-    printf("\n\t\t::::PROGRAM EXITED::::\n\n");
+    // printf("\n\t\t\t::::PROGRAM EXITED::::\n\n");
+
+    thank_you();
 
     return 0;
 }
