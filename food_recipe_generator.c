@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
+#include <windows.h>
+#include <dos.h>
+#include <conio.h>
 
 typedef struct elements
 {
@@ -86,7 +89,7 @@ int map_ele(int num, node arr[num], char target[50])
 void display_map(int num, node arr[num])
 {
     int count = 0;
-    printf("\n");
+    printf("\n\t\t");
 
     for (int i = 0; i < num; i++)
     {
@@ -95,7 +98,7 @@ void display_map(int num, node arr[num])
         if (count == 3)
         {
             count = 0;
-            printf("\n");
+            printf("\n\t\t");
         }
     }
 
@@ -108,19 +111,19 @@ void cns_graph(int num, node arr[num], int ad_mat[num][num])
 
     for (int i = 0; i < num; i++)
     {
-        printf("\nEnter element %d = ", i + 1);
+        printf("\n\t\tEnter element %d = ", i + 1);
         scanf(" %[^\n]s", &arr[i].ele);
         // fgets(arr[i].ele, 50, stdin);
     }
 
-    printf("\nEnter the number of edge = ");
+    printf("\n\t\tEnter the number of edge = ");
     scanf("%d", &edge);
 
     display_map(num, arr);
 
     for (int i = 0; i < edge; i++)
     {
-        printf("\nEnter elements of Edge %d = ", i + 1);
+        printf("\n\t\tEnter elements of Edge %d = ", i + 1);
         scanf("%d %d", &temp1, &temp2);
 
         ad_mat[temp1][temp2] = 1;
@@ -161,7 +164,7 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
     {
         if (visi[head->val] != 1)
         {
-            printf("%s\n", arr[head->val].ele);
+            printf("\t\t%s\n", arr[head->val].ele);
             visi[head->val] = 1;
         }
         pop_ele = head->val;
@@ -177,7 +180,7 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
                     if (in_deg[i] == 0)
                     {
                         head = enqueue(head, i);
-                        printf("%s\n", arr[i].ele);
+                        printf("\t\t%s\n", arr[i].ele);
                         visi[i] = 1;
                     }
                 }
@@ -187,13 +190,66 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visi[num], int 
     }
 }
 
+// void box(int a, int b, int c, int d)
+// {
+//     for(int i=a; i<c; i++)
+//     {
+//         gotoxy(i,b);
+//         printf("\xcd");
+//         gotoxy(i,d);
+//         printf("\xcd");
+//     }
+
+//     for(int j=b; j<d; j++)
+//     {
+//         gotoxy(a,j);
+//         printf("\xba");
+//         gotoxy(c,j);
+//         printf("\xba");
+//     }
+//     gotoxy(a,b);
+//     printf("\xc9");
+//     gotoxy(c,b);
+//     printf("\xbb");
+//     gotoxy(a,d);
+//     printf("\xc8");
+//     gotoxy(c,d);
+//     printf("\xbc");   
+
+// }
+
+void print_title()
+{
+    system("cls");
+    printf("\n\n");
+    system("color 0A");
+    char a = 177, b = 219;
+    printf("\t\t");
+    for(int i=0; i<88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+    printf("\n\t\t\t\t\t\tFOOD RECIPE GENERATOR\n");
+    printf("\t\t");
+    for(int i=0; i<88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+}
+
 int main()
 {
     int num, edge;
 
     printf("\n::::PROGRAM STARTED::::\n\n");
 
-    printf("\nEnter the number of elements = ");
+    print_title();
+
+    printf("\n\n\t\tEnter the number of elements = ");
     scanf("%d", &num);
 
     node arr[num];
@@ -206,7 +262,7 @@ int main()
 
     topo_sort(num, arr, ad_mat, visi, in_deg, head);
 
-    printf("\n::::PROGRAM EXITED::::\n\n");
+    printf("\n\t\t::::PROGRAM EXITED::::\n\n");
 
     return 0;
 }
