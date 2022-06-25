@@ -14,6 +14,7 @@
 
 FILE *fptr;
 FILE *fptr2;
+FILE *fptr3;
 
 typedef struct elements
 {
@@ -25,6 +26,19 @@ typedef struct queue
     int val;
     struct queue *next;
 } queue;
+
+typedef struct stack
+{
+    char p;
+    struct stack *to;
+} stack;
+
+typedef struct tree
+{
+    int val;
+    struct tree *left;
+    struct tree *right;
+} tree;
 
 typedef struct usr
 {
@@ -67,6 +81,51 @@ queue *dequeue(queue *head)
 
     head = head->next;
     return head;
+}
+
+stack *push(stack *top, char ch)
+{
+    if (top == NULL)
+    {
+        top = malloc(sizeof(stack));
+        top->p = ch;
+        top->to = NULL;
+        return top;
+    }
+
+    stack *tmp = malloc(sizeof(stack));
+    tmp->p = ch;
+    tmp->to = top;
+    top = tmp;
+
+    return top;
+}
+
+stack *pop(stack *top)
+{
+    if (top != NULL)
+    {
+        top = top->to;
+        return top;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void design()
+{
+    printf("\n\n");
+    system("color 06");
+    char a = 177, b = 219;
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
 }
 
 void init_all(int num, int visited[num], int ad_mat[num][num])
@@ -200,23 +259,25 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visited[num], i
         }
     }
 
+    printf("\n\t\tRECIPE NAME: \"%s\"\n\n", reci_name->ele);
+
     while (head != NULL)
     {
         if (visited[head->val] != 1)
         {
             if (time == 0)
             {
-                // printf("\t\t%s\n", arr[head->val].ele);
-                // usleep(1000000);
+                printf("\t\t\t\t\t%s", arr[head->val].ele);
+                usleep(1000000);
                 fprintf(fptr, "%s\n", arr[head->val].ele);
                 visited[head->val] = 1;
                 time = 1;
             }
             else
             {
-                // printf("\n\t\t  %c\n", 25);
-                // printf("\t\t%s\n", arr[head->val].ele);
-                // usleep(1000000);
+                printf("\n\t\t\t\t\t  %c\n", 25);
+                printf("\t\t\t\t\t%s", arr[head->val].ele);
+                usleep(1000000);
                 fprintf(fptr, "%s\n", arr[head->val].ele);
                 visited[head->val] = 1;
             }
@@ -234,9 +295,9 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visited[num], i
                     if (in_deg[i] == 0)
                     {
                         head = enqueue(head, i);
-                        // printf("\n\t\t  %c\n", 25);
-                        // printf("\t\t%s\n", arr[i].ele);
-                        // usleep(1000000);
+                        printf("\n\t\t\t\t\t  %c\n", 25);
+                        printf("\t\t\t\t\t%s", arr[i].ele);
+                        usleep(1000000);
                         fprintf(fptr, "%s\n", arr[i].ele);
                         visited[i] = 1;
                     }
@@ -248,42 +309,346 @@ void topo_sort(int num, node arr[num], int ad_mat[num][num], int visited[num], i
     fclose(fptr2);
 }
 
-// void box(int a, int b, int c, int d)
-// {
-//     for(int i=a; i<c; i++)
-//     {
-//         gotoxy(i,b);
-//         printf("\xcd");
-//         gotoxy(i,d);
-//         printf("\xcd");
-//     }
+void heapify_max(int *arr, int size)
+{
+    int temp;
+    for (int j = (size / 2) - 1; j >= 0; j--)
+    {
 
-//     for(int j=b; j<d; j++)
-//     {
-//         gotoxy(a,j);
-//         printf("\xba");
-//         gotoxy(c,j);
-//         printf("\xba");
-//     }
-//     gotoxy(a,b);
-//     printf("\xc9");
-//     gotoxy(c,b);
-//     printf("\xbb");
-//     gotoxy(a,d);
-//     printf("\xc8");
-//     gotoxy(c,d);
-//     printf("\xbc");
+        int i = j;
+        int check = 0;
+        while (2 * i + 1 < size)
+        {
+            if (2 * i + 2 == size)
+            {
+                if (*(arr + i) < *(arr + 2 * i + 1))
+                {
+                    temp = *(arr + i);
+                    *(arr + i) = *(arr + 2 * i + 1);
+                    *(arr + 2 * i + 1) = temp;
+                    i = 2 * i + 1;
+                    check = 1;
+                }
+            }
+            else
+            {
+                if (*(arr + 2 * i + 2) > *(arr + 2 * i + 1))
+                {
+                    if (*(arr + i) < *(arr + 2 * i + 2))
+                    {
+                        temp = *(arr + i);
+                        *(arr + i) = *(arr + 2 * i + 2);
+                        *(arr + 2 * i + 2) = temp;
+                        i = 2 * i + 2;
+                        check = 1;
+                    }
+                }
+                else
+                {
+                    if (*(arr + i) < *(arr + 2 * i + 1))
+                    {
+                        temp = *(arr + i);
+                        *(arr + i) = *(arr + 2 * i + 1);
+                        *(arr + 2 * i + 1) = temp;
+                        i = 2 * i + 1;
+                        check = 1;
+                    }
+                }
+            }
 
-// }
+            if (check == 1)
+            {
+                check = 0;
+            }
+            else
+            {
+                break;
+            }
+            // printf("\nDEBUG %d %d\n", size, i);
+        }
+    }
+}
+
+tree *lvl_order(int *arr, tree *root, int idx, int size)
+{
+    if (idx < size)
+    {
+        root = malloc(sizeof(node));
+        root->val = *(arr + idx);
+        root->left = NULL;
+        root->right = NULL;
+
+        root->left = lvl_order(arr, root->left, 2 * idx + 1, size);
+        root->right = lvl_order(arr, root->right, 2 * idx + 2, size);
+    }
+    return root;
+}
+
+tree *pop_max(tree *root)
+{
+    // printf("\npop_%d_%d_%d\n", root->val, root->left->val, root->right->val);
+
+    if (root == NULL)
+    {
+        return NULL;
+    }
+    tree *p = root;
+    tree *q = root;
+    int temp;
+
+    if (p->left == NULL && p->right == NULL)
+    {
+        return NULL;
+    }
+    // printf("\nDEBUG A1\n");
+    // printf("\npop_%d_%d_%d\n", root->val, root->left->val, root->right->val);
+    // printf("\npop_p_%d_%d_%d\n", p->val, p->left->val, p->right->val);
+
+    // printf("\n%d___%d\n", p->left->val, p->right->val);
+    while (true)
+    {
+        if (p->left == NULL)
+        {
+            // printf("\nDEBUG A2\n");
+
+            p = p->right;
+            temp = p->val;
+            p->val = q->val;
+            q->val = temp;
+            if (p->left == NULL && p->right == NULL)
+            {
+                q->right = NULL;
+                break;
+            }
+            q = p;
+        }
+
+        if (p->right == NULL)
+        {
+            // printf("\nDEBUG A3\n");
+
+            p = p->left;
+            temp = p->val;
+            p->val = q->val;
+            q->val = temp;
+            if (p->left == NULL && p->right == NULL)
+            {
+                q->left = NULL;
+                break;
+            }
+            q = p;
+        }
+        // printf("\nCHECK 01\n");
+        // printf("\n%d___%d\n", p->left->val, p->right->val);
+
+        if (p->left != NULL && p->right != NULL)
+        {
+            if (p->left->val > p->right->val)
+            {
+                // printf("\nDEBUG A4\n");
+
+                p = p->left;
+                temp = p->val;
+                p->val = q->val;
+                q->val = temp;
+                if (p->left == NULL && p->right == NULL)
+                {
+                    q->left = NULL;
+                    break;
+                }
+                q = p;
+            }
+            else
+            {
+                // printf("\nDEBUG A5\n");
+
+                p = p->right;
+                temp = p->val;
+                p->val = q->val;
+                q->val = temp;
+                if (p->left == NULL && p->right == NULL)
+                {
+                    q->right = NULL;
+                    break;
+                }
+                q = p;
+            }
+        }
+    }
+    return root;
+}
+
+tree *del_max(tree *root, int size, int *arr)
+{
+
+    for (int i = 0; i < size; i++)
+    {
+        // printf("\ndel_%d_%d_%d\n", root->val, root->left->val, root->right->val);
+
+        // printf("\nDEBUG A\n");
+        // printf("\n%d\n", *(arr + i));
+        *(arr + i) = root->val;
+        // printf("\nDEBUG B\n");
+
+        root = pop_max(root);
+    }
+    return root;
+}
+
+void recom_reci()
+{
+    int freq[10], freq2[10];
+    char tmp_str[3], ch, reci_name[100];
+    int count = 0, reci_no, cur = 2, k = 0, flag;
+
+    for (int i = 0; i < 10; i++)
+    {
+        freq[i] = 0;
+        freq2[i] = 0;
+    }
+
+    fptr = fopen("history.txt", "r");
+
+    // printf("\n");
+    design();
+    // printf("\n");
+
+    printf("\n\n\t\t\t\t   :::: RECOMMENDED RECIPES ::::\n");
+
+    if (fptr == NULL)
+    {
+        printf("\n\t\tYou don't have any previously saved history\n");
+    }
+    else
+    {
+        while (true)
+        {
+            ch = fgetc(fptr);
+            if (ch == EOF)
+                break;
+            if (ch == '\n')
+                count++;
+        }
+        fseek(fptr, 0, SEEK_SET);
+
+        while (count--)
+        {
+            fgets(tmp_str, sizeof(tmp_str), fptr);
+            reci_no = atoi(tmp_str);
+            freq[reci_no] = freq[reci_no] + 1;
+            freq2[reci_no] = freq2[reci_no] + 1;
+        }
+
+        fclose(fptr);
+
+        tree *root = NULL;
+
+        heapify_max(freq, 10);
+
+        root = lvl_order(freq, root, 0, 10);
+
+        root = del_max(root, 10, freq);
+
+        fptr = fopen("contents.txt", "r");
+
+        while (cur--)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (freq2[i] == freq[k])
+                {
+                    flag = i;
+                    // printf("\n%d %d\n", flag, k);
+                    while (flag--)
+                    {
+                        fgets(reci_name, sizeof(reci_name), fptr);
+                    }
+                    fseek(fptr, 0, SEEK_SET);
+
+                    printf("\n\t\t %s\n", reci_name);
+
+                    i = 0;
+                    k++;
+                    break;
+                }
+            }
+        }
+    }
+
+    fclose(fptr);
+}
+
+void view_profile()
+{
+    fptr = fopen("details.txt", "r");
+
+    system("cls");
+    printf("\n\n");
+    system("color 06");
+    char a = 177, b = 219;
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+    printf("\n\n\t\t\t\t\t\t    VIEW PROFILE\n\n");
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+
+    int count = 0;
+    char ch, detail[100];
+
+    while (true)
+    {
+        ch = fgetc(fptr);
+        if (ch == EOF)
+            break;
+        if (ch == '\n')
+            count++;
+    }
+    fseek(fptr, 0, SEEK_SET);
+
+    fgets(detail, sizeof(detail), fptr);
+
+    printf("\n\n\t\tNAME : %s\n", detail);
+
+    fgets(detail, sizeof(detail), fptr);
+
+    printf("\t\tUSERNAME : %s\n", detail);
+
+    fgets(detail, sizeof(detail), fptr);
+
+    printf("\t\tPHONE NUMBER : %s\n", detail);
+
+    fgets(detail, sizeof(detail), fptr);
+
+    printf("\t\tEMAIL ID : %s\n", detail);
+}
 
 void display_recipe()
 {
     fptr2 = fopen("contents.txt", "r");
+    fptr3 = fopen("history.txt", "r");
 
     char choice;
     char ch;
     char recipe_name[100];
-    int counter = 0, index = 1;
+    int counter = 0, index = 1, counter2 = 0, flag2;
+    char reci_num, reci_name[100];
+    int reci_no, ichoice, flag;
+
+    char tmp_str[3];
+    // tmp_str[1] = '\0';
+
+    queue *hist = NULL;
+    stack *top = NULL;
 
     while (true)
     {
@@ -295,9 +660,40 @@ void display_recipe()
     }
     fseek(fptr2, 0, SEEK_SET);
 
+    if (fptr3 == NULL)
+    {
+        counter2 = 0;
+    }
+    else
+    {
+        while (true)
+        {
+            ch = fgetc(fptr3);
+            if (ch == EOF)
+                break;
+            if (ch == '\n')
+                counter2++;
+        }
+        fseek(fptr3, 0, SEEK_SET);
+
+        flag = counter2;
+
+        // printf("%d****", counter2);
+
+        while (counter2--)
+        {
+            fgets(tmp_str, sizeof(tmp_str), fptr3);
+            reci_no = atoi(tmp_str);
+            // printf("\n----%s %d---\n", tmp_str, reci_no);
+            hist = enqueue(hist, reci_no);
+        }
+    }
+
+    // getch();
+
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -306,7 +702,7 @@ void display_recipe()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\tFOOD RECIPE GENERATOR\n");
+    printf("\n\n\t\t\t\t\t\t        CONTENTS\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -320,11 +716,90 @@ void display_recipe()
     while (counter--)
     {
         fgets(recipe_name, sizeof(recipe_name), fptr2);
-        printf("\t\tEnter %d ----> %s\n", index++, recipe_name);
+        printf("\n\t\t\t\t%d. %s", index++, recipe_name);
     }
 
-    printf("Enter your choice : ");
+    printf("\n");
+
+    recom_reci();
+
+    // printf("\n");
+    design();
+    printf("\n");
+
+    printf("\n");
+
+    printf("\t\tEnter your choice : ");
     scanf(" %c", &choice);
+
+    flag2 = (int)choice - 48;
+
+    tmp_str[0] = choice;
+    tmp_str[1] = '\0';
+
+    ichoice = atoi(tmp_str);
+
+    // printf("\n");
+
+    // printf("\nDEBUG 01\n");
+
+    if (flag == 10)
+    {
+        // hist = dequeue(hist);
+        queue *temp = hist;
+        while (temp->next->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = NULL;
+        // hist = enqueue(hist, ichoice);
+        queue *tmp = malloc(sizeof(queue));
+        tmp->val = ichoice;
+        tmp->next = hist;
+        hist = tmp;
+    }
+    else
+    {
+        // hist = enqueue(hist, ichoice);
+        queue *tmp = malloc(sizeof(queue));
+        tmp->val = ichoice;
+        tmp->next = hist;
+        hist = tmp;
+    }
+
+    // printf("\nDEBUG 02\n");
+    // printf("\n%d %d\n", hist->val, hist->next->val);
+    fclose(fptr3);
+
+    fptr3 = fopen("history.txt", "w");
+
+    while (hist != NULL)
+    {
+        reci_no = hist->val;
+        hist = dequeue(hist);
+        reci_num = (char)(reci_no + 48);
+        tmp_str[0] = reci_num;
+        tmp_str[1] = '\0';
+        fprintf(fptr3, "%s\n", tmp_str);
+        // top = push(top, reci_num);
+
+        // printf("\nA\n");
+    }
+
+    // printf("\nDEBUG 02A\n");
+
+    fclose(fptr3);
+
+    fptr3 = fopen("contents.txt", "r");
+
+    while (flag2--)
+    {
+        fgets(reci_name, sizeof(reci_name), fptr3);
+    }
+
+    fclose(fptr3);
+
+    printf("\n\t\tRECIPE NAME: \"%s\"\n\n", reci_name);
 
     char recipe_file_name[] = "recipe";
     char txt[] = "0.txt";
@@ -341,22 +816,86 @@ void display_recipe()
     {
         if (i != 0)
         {
-            printf("\n\t\t  %c\n", 25);
+            printf("\t\t  %c", 25);
         }
         fgets(step, sizeof(step), fptr);
-        printf("\t\t %s\n", step);
+        printf("\n\t\t %s", step);
         usleep(1000000);
     }
     fclose(fptr);
 
-    getch();
+    // getch();
 }
+
+void view_history()
+{
+    int counter = 0, reci_no, temp;
+    char ch, reci_num;
+    char reci_name[100];
+    char tmp_str[3];
+
+    fptr = fopen("history.txt", "r");
+    fptr2 = fopen("contents.txt", "r");
+
+    if (fptr == NULL)
+    {
+        printf("\n\t\tYou don't have any previously saved history");
+    }
+    else
+    {
+        queue *hist = NULL;
+
+        while (true)
+        {
+            ch = fgetc(fptr);
+            if (ch == EOF)
+                break;
+            if (ch == '\n')
+                counter++;
+        }
+        fseek(fptr, 0, SEEK_SET);
+
+        while (counter--)
+        {
+            fgets(tmp_str, sizeof(tmp_str), fptr);
+            reci_no = atoi(tmp_str);
+            hist = enqueue(hist, reci_no);
+        }
+
+        printf("\n");
+        design();
+        printf("\n");
+
+        printf("\n\t\t\t\t\t:::::::: VIEW HISTORY ::::::::\n");
+
+        while (hist != NULL)
+        {
+            temp = hist->val;
+            hist = dequeue(hist);
+
+            while (temp--)
+            {
+                fgets(reci_name, sizeof(reci_name), fptr2);
+            }
+
+            printf("\n\n\t\t\t\t\t    You viewed %s", reci_name);
+            fseek(fptr2, 0, SEEK_SET);
+        }
+    }
+
+    fclose(fptr);
+    fclose(fptr2);
+
+    // getch();
+}
+
+// void update_reci()
 
 void print_title()
 {
     // system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -379,7 +918,7 @@ void iiit_kalyani()
 {
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -402,7 +941,7 @@ void dsa_project()
 {
     // system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -432,7 +971,7 @@ void thank_you()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\t::::THANK YOU::::\n");
+    printf("\n\n\t\t\t\t\t\t   ::::THANK YOU::::\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -465,6 +1004,8 @@ void hashing(int size, char arr[size], char hash[1000])
     int size2 = size;
     size = 1000;
 
+    // srand(time(0));
+
     srand(time(0));
 
     int r, count = 0, track = 0, count2 = 0;
@@ -473,22 +1014,7 @@ void hashing(int size, char arr[size], char hash[1000])
 
     for (int i = 0; i < 1000; i++)
     {
-        // if (count < size2 && arr[i] != '\0' && arr[i] != '\n' && track == 0)
-        // {
-        //     if (i == 5 + (5 * count))
-        //     {
-        //         hash[i] = arr[i];
-        //         count++;
-        //     }
 
-        //     if (arr[i] != '\0' && arr[i] != '\n')
-        //     {
-        //         track = 1;
-        //     }
-        // }
-        // else
-        // {
-        // }
         r = rand();
         r = r % 50;
         r += 49;
@@ -497,15 +1023,15 @@ void hashing(int size, char arr[size], char hash[1000])
         // printf("%c ", hash[i]);
     }
 
-    for(int i=0; i<100; i++)
+    for (int i = 0; i < 100; i++)
     {
-        if(arr[i] == '\0' || arr[i] == '\n')
+        if (arr[i] == '\0' || arr[i] == '\n')
         {
             break;
         }
-        track = 5*i + 5;
+        track = 5 * i + 5;
         hash[track] = arr[i];
-        count2++; 
+        count2++;
     }
 
     hash[0] = count2;
@@ -515,13 +1041,6 @@ void hashing(int size, char arr[size], char hash[1000])
     // getch();
 }
 
-// bool hash_check(int arr[100])
-// {
-//     int hash_p[1000];
-
-//     fptr = fopen()
-// }
-
 bool sign_up()
 {
     usr user;
@@ -530,7 +1049,7 @@ bool sign_up()
 
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -539,7 +1058,7 @@ bool sign_up()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\tSIGN UP PAGE\n");
+    printf("\n\n\t\t\t\t\t\t      SIGN UP PAGE\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -574,9 +1093,12 @@ bool sign_up()
                 printf("\b \b");
             }
         }
-        user.pwd[i] = ch;
-        printf("*");
-        i++;
+        else
+        {
+            user.pwd[i] = ch;
+            printf("*");
+            i++;
+        }
     }
     user.pwd[i] = '\0';
 
@@ -593,9 +1115,12 @@ bool sign_up()
                 printf("\b \b");
             }
         }
-        c_pwd[i] = ch2;
-        printf("*");
-        i++;
+        else
+        {
+            c_pwd[i] = ch2;
+            printf("*");
+            i++;
+        }
     }
     c_pwd[i] = '\0';
 
@@ -617,6 +1142,8 @@ bool sign_up()
         // strncpy(f_pwd, f_ptr, 1000);
         fprintf(fptr, "%s\n", f_pwd);
         fclose(fptr);
+
+        remove("history.txt");
         return true;
         // fprintf(fptr, "%s\n", user.pwd);
     }
@@ -626,7 +1153,7 @@ bool sign_in()
 {
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -635,7 +1162,7 @@ bool sign_in()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\tSIGN IN PAGE\n");
+    printf("\n\n\t\t\t\t\t\t    SIGN IN PAGE\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -646,9 +1173,9 @@ bool sign_in()
 
     char tmp1[100], tmp2[100];
 
-    printf("\n\n\t\tEnter your username = ");
+    printf("\n\n\t\tEnter your username : ");
     scanf("%s", tmp1);
-    printf("\n\t\tEnter your password = ");
+    printf("\n\t\tEnter your password : ");
 
     int i = 0;
     char ch;
@@ -663,9 +1190,12 @@ bool sign_in()
                 printf("\b \b");
             }
         }
-        tmp2[i] = ch;
-        printf("*");
-        i++;
+        else
+        {
+            tmp2[i] = ch;
+            printf("*");
+            i++;
+        }
     }
     tmp2[i] = '\0';
 
@@ -702,18 +1232,26 @@ bool sign_in()
     // printf("%d", temp2[0]);
     // usleep(10000000);
 
-    for(int i=0; i<temp2[0]; i++)
+    for (int i = 0; i < temp2[0]; i++)
     {
         // if(tmp2[i] == '\0' || tmp2[i] == '\n')
         // {
         //     break;
         // }
 
-        if(tmp2[i] != temp2[5*i + 5])
+        if (tmp2[i] != temp2[5 * i + 5])
         {
             check = 1;
         }
     }
+
+    printf("\n");
+    design();
+    printf("\n");
+
+    printf("\n\t\tPress any key to continue...");
+
+    getch();
 
     if (strcmp(temp1, tmp1) == 0 && check == 0)
     {
@@ -727,7 +1265,7 @@ int login_pg()
 {
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -736,7 +1274,7 @@ int login_pg()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\tLOGIN PAGE\n");
+    printf("\n\n\t\t\t\t\t\t      LOGIN PAGE\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -748,12 +1286,24 @@ int login_pg()
     int choice, flag;
     bool s1, s2;
 
-    printf("\n\n\t\t1.Sign Up");
-    printf("\n\t\t2.Sign In");
-    printf("\n\t\t3.Exit");
+    printf("\n\n\t\t\t\t\t    Sign Up               Enter 1");
+    printf("\n\t\t\t\t\t    Sign In               Enter 2");
+    printf("\n\t\t\t\t\t    Exit                  Enter 3");
+
+    // printf("\n");
+    design();
+    printf("\n");
 
     printf("\n\n\t\tEnter your choice = ");
     scanf("%d", &choice);
+
+    // printf("\n");
+    design();
+    printf("\n");
+
+    printf("\n\t\tPress any key to continue...");
+
+    getch();
 
     if (choice == 3)
     {
@@ -801,7 +1351,7 @@ int main_menu()
 {
     system("cls");
     printf("\n\n");
-    system("color 0E");
+    system("color 06");
     char a = 177, b = 219;
     printf("\t\t");
     for (int i = 0; i < 88; i++)
@@ -810,7 +1360,7 @@ int main_menu()
     }
     printf("\r");
     printf("\t\t");
-    printf("\n\t\t\t\t\t\tMAIN MENU\n");
+    printf("\n\n\t\t\t\t\t\t      MAIN MENU\n\n");
     printf("\t\t");
     for (int i = 0; i < 88; i++)
     {
@@ -821,16 +1371,23 @@ int main_menu()
 
     int choice, flag;
 
-    printf("\n\n\t\t1.Add New Recipe");
-    printf("\n\t\t2.View Recipe(s)");
-    printf("\n\t\t3.Exit");
+    printf("\n\n\t\t\t\t        Add New Recipe                Enter 1");
+    printf("\n\t\t\t\t        View Recipe(s)                Enter 2");
+    printf("\n\t\t\t\t        Update Recipe                 Enter 3");
+    printf("\n\t\t\t\t        View History                  Enter 4");
+    printf("\n\t\t\t\t        View Profile                  Enter 5");
+    printf("\n\t\t\t\t        Exit                          Enter 6");
 
-    printf("\n\n\t\tEnter your choice = ");
+    printf("\n");
+    design();
+    printf("\n");
+
+    printf("\n\n\t\tEnter your choice : ");
     scanf("%d", &choice);
 
-    if (choice == 3)
+    if (choice == 6)
     {
-        flag = 3;
+        flag = 6;
     }
     if (choice == 1)
     {
@@ -841,36 +1398,54 @@ int main_menu()
         // display_recipe;
         flag = 2;
     }
+    else if (choice == 3)
+    {
+        flag = 3;
+    }
+    else if (choice == 4)
+    {
+        return 4;
+    }
+    else if (choice == 5)
+    {
+        return 5;
+    }
 
     return flag;
 }
 
-void design()
+void welcome()
 {
+    printf("\n\n\n\n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\n\n\t\t\t\t\t       FOOD");
+    printf("\n\n\t\t\t\t\t      RECIPE");
+    printf("\n\n\t\t\t\t\t     GENERATOR");
+    printf("\n\n\n\t\t\t\t\t    IIIT KALYANI");
+    printf("\n\n\t\t\t\t\t     DSA PROJECT");
+    printf("\n\n\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+    printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
+
     printf("\n\n");
-    system("color 0E");
-    char a = 177, b = 219;
-    printf("\t\t");
-    for (int i = 0; i < 88; i++)
-    {
-        printf("%c", b);
-    }
-    printf("\r");
-    printf("\t\t");
 }
 
 int main()
 {
     int num, edge, status = VAL, status2 = VAL;
 
-    // getch();
+    getch();
 
-    // printf("\n::::PROGRAM STARTED::::\n\n");
-    iiit_kalyani();
-    print_title();
-    dsa_project();
-
-    printf("\n\n");
+    welcome2();
 
     getch();
 
@@ -881,7 +1456,7 @@ int main()
 
     if (status == 0)
     {
-        while (status2 != 3)
+        while (status2 != 6)
         {
             status2 = main_menu();
 
@@ -899,6 +1474,8 @@ int main()
                 int ad_mat[num][num], visited[num], in_deg[num];
                 queue *head = NULL;
 
+                init_all(num, visited, ad_mat);
+
                 cns_graph(num, arr, ad_mat);
 
                 calc_in_deg(num, ad_mat, in_deg);
@@ -909,40 +1486,34 @@ int main()
             {
                 display_recipe();
             }
+            else if (status2 == 3)
+            {
+                update_reci();
+            }
+            else if (status2 == 4)
+            {
+                view_history();
+            }
+            else if (status2 == 5)
+            {
+                view_profile();
+            }
+
+            printf("\n");
+            design();
+            printf("\n");
+
+            printf("\n\t\tPress any key to continue...");
+
+            getch();
         }
     }
 
-    // login_pg();
-
-    // print_title();
-
-    // pwd_gen();
-
-    // node reci_name;
-
-    // printf("\n\n\t\tEnter recipe name = ");
-    // scanf("%[^\n]s", reci_name.ele);
-
-    // printf("\n\t\tEnter the number of elements = ");
-    // scanf("%d", &num);
-
-    // node arr[num];
-    // int ad_mat[num][num], visited[num], in_deg[num];
-    // queue *head = NULL;
-
-    // cns_graph(num, arr, ad_mat);
-
-    // calc_in_deg(num, ad_mat, in_deg);
-
-    // topo_sort(num, arr, ad_mat, visited, in_deg, head, &(reci_name));
-
-    // display_recipe();
-
-    // // printf("\n\t\t\t::::PROGRAM EXITED::::\n\n");
-
     thank_you();
 
-    printf("\n");
+    printf("\n\n\n");
+
+    getch();
 
     return 0;
 }
