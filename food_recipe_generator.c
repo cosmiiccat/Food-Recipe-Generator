@@ -889,7 +889,171 @@ void view_history()
     // getch();
 }
 
-// void update_reci()
+void update_reci()
+{
+    fptr2 = fopen("contents.txt", "r");
+
+    char choice;
+    char ch;
+    char recipe_name[100], reci_names[100];
+    int counter = 0, index = 1, num, flag;
+
+    while (true)
+    {
+        ch = fgetc(fptr2);
+        if (ch == EOF)
+            break;
+        if (ch == '\n')
+            counter++;
+    }
+    fseek(fptr2, 0, SEEK_SET);
+
+    system("cls");
+    printf("\n\n");
+    system("color 06");
+    char a = 177, b = 219;
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+    printf("\n\n\t\t\t\t\t\t         CONTENTS\n\n");
+    printf("\t\t");
+    for (int i = 0; i < 88; i++)
+    {
+        printf("%c", b);
+    }
+    printf("\r");
+    printf("\t\t");
+
+    printf("\n");
+
+    while (counter--)
+    {
+        fgets(recipe_name, sizeof(recipe_name), fptr2);
+        printf("\n\t\t\t\t%d. %s", index++, recipe_name);
+    }
+
+    printf("\n");
+    design();
+    printf("\n");
+
+    printf("\n\t\tEnter your choice : ");
+    scanf(" %c", &choice);
+
+    flag = (int)choice - 48;
+
+    fptr3 = fopen("contents.txt", "r");
+
+    while (flag--)
+    {
+        fgets(reci_names, sizeof(reci_names), fptr3);
+    }
+
+    fclose(fptr3);
+
+    printf("\n\t\tRECIPE NAME: \"%s\"\n\n", reci_names);
+
+    char recipe_file_name[] = "recipe";
+    char txt[] = "0.txt";
+    txt[0] = choice;
+    strcat(recipe_file_name, txt);
+
+    fptr = fopen(recipe_file_name, "w");
+
+    // fptr = fopen(recipe_file_name, "w");
+
+    // printf("\n%s----\n", recipe_file_name); // correct
+
+    node reci_name;
+
+    // printf("\n%s 00000\n", recipe_file_name); // Correct
+
+    // printf("\n\n\t\tEnter recipe name = ");
+    // scanf(" %[^\n]s", reci_name.ele);
+
+    printf("\n\n\t\tEnter the number of elements = ");
+    scanf(" %d", &num);
+
+    // printf("\n%s---------\n", recipe_file_name); // Wrong
+
+    node arr[num];
+    int ad_mat[num][num], visited[num], in_deg[num];
+    queue *head = NULL;
+
+    cns_graph(num, arr, ad_mat);
+
+    // printf("\n%s****\n", recipe_file_name);
+
+    calc_in_deg(num, ad_mat, in_deg);
+
+    // printf("\n%s********\n", recipe_file_name);
+
+    int pop_ele, time = 0;
+    printf("\n");
+
+    // fclose(fptr);
+    fclose(fptr2);
+
+    fprintf(fptr, "%d\n", num);
+
+    for (int i = 0; i < num; i++)
+    {
+        if (in_deg[i] == 0)
+        {
+            head = enqueue(head, i);
+        }
+    }
+
+    while (head != NULL)
+    {
+        if (visited[head->val] != 1)
+        {
+            if (time == 0)
+            {
+                // printf("\t\t%s\n", arr[head->val].ele);
+                // usleep(1000000);
+                fprintf(fptr, "%s\n", arr[head->val].ele);
+                visited[head->val] = 1;
+                time = 1;
+            }
+            else
+            {
+                // printf("\n\t\t  %c\n", 25);
+                // printf("\t\t%s\n", arr[head->val].ele);
+                // usleep(1000000);
+                fprintf(fptr, "%s\n", arr[head->val].ele);
+                visited[head->val] = 1;
+            }
+        }
+        pop_ele = head->val;
+        head = dequeue(head);
+
+        for (int i = 0; i < num; i++)
+        {
+            if (ad_mat[pop_ele][i] == 1)
+            {
+                if (visited[i] != 1 && in_deg[i] != 0)
+                {
+                    in_deg[i] -= 1;
+                    if (in_deg[i] == 0)
+                    {
+                        head = enqueue(head, i);
+                        // printf("\n\t\t  %c\n", 25);
+                        // printf("\t\t%s\n", arr[i].ele);
+                        // usleep(1000000);
+                        fprintf(fptr, "%s\n", arr[i].ele);
+                        visited[i] = 1;
+                    }
+                }
+            }
+        }
+    }
+    fclose(fptr);
+    // fclose(fptr2);
+}
 
 void print_title()
 {
@@ -1437,6 +1601,23 @@ void welcome()
     printf("\t. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \n");
 
     printf("\n\n");
+}
+
+void welcome2()
+{
+    system("color 06");
+    // printf("\n\t\t*---------------------------------------------------------*");
+    printf("\n\t**-**-**-**-**-**-**-**-**-***-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**");
+    printf("\n\t            =-=-=-=-=-=-=-=--=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=");
+    printf("\n\t            =                                                                              =");
+    printf("\n\t            =                                     WELCOME                                  =");
+    printf("\n\t            =                                       TO                                     =");
+    printf("\n\t            =                           FOOD RECIPE GENERATION SYSTEM                      =");
+    printf("\n\t            =                           BY: ABHIK MAJI & PREETAM PATI                      =");
+    printf("\n\t            =                                                                              =");
+    printf("\n\t            =-=-=-=-=-=-=-=--=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=");
+    printf("\n\t**-**-**-**-**-**-**-**-**-***-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**\n");
+    // printf("\n\t\t*---------------------------------------------------------*\n");
 }
 
 int main()
